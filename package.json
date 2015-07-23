@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/egis/build-tools/issues"
   },
-  "homepage": "https://github.com/egis/build-tools#readme"
+  "homepage": "https://github.com/egis/build-tools#readme",
+   "dependencies": {
+    "unzip": ""
+   }
 }
