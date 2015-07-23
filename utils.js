@@ -1,5 +1,19 @@
 var os = require('os');
+var fs = require('fs');
+var unzip = require('unzip');
 module.exports = {
+
+    buildDir: function() {
+
+        var EGISUI = '../EgisUI/build/';
+        if (fs.lstatSync('EgisUI.war').isFile()) {
+            console.log('Unziping  EgisUI.war')
+            EGISUI = 'build/EgisUI/';
+            fs.createReadStream('EgisUI.war')
+                .pipe(unzip.Extract({path: EGISUI}));
+        }
+        return EGISUI;
+    },
 
     defaultKarma: function (config) {
 
