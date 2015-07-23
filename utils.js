@@ -1,19 +1,29 @@
 var os = require('os');
 var fs = require('fs');
-var unzip = require('unzip');
+var child_process = require('child_process')
+
 module.exports = {
 
     buildDir: function() {
-
         var EGISUI = '../EgisUI/build/';
-        if (fs.lstatSync('EgisUI.war').isFile()) {
+
+        if (this.exists('./EgisUI.war')) {
             console.log('Unziping  EgisUI.war')
-            EGISUI = 'build/EgisUI/';
-            fs.createReadStream('EgisUI.war')
-                .pipe(unzip.Extract({path: EGISUI}));
-        }
+            this.sh("mkdir -p build/EgisUI && unzip -o EgisUI.war -d build/EgisUI/")
+            EGISUI = 'build/EgisUI/';              
+        }             
+        
+        console.log(EGISUI)
         return EGISUI;
     },
+
+    exists: function(path) {
+        return fs.statSync(path).isFile()
+    },
+    sh: function(cmd) {
+        return child_process.execSync(cmd).toString('utf8')
+    },
+
 
     defaultKarma: function (config) {
 
@@ -88,3 +98,5 @@ module.exports = {
         return ip;
     }
 };
+
+module.exports.buildDir()
