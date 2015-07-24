@@ -17,8 +17,14 @@ module.exports = {
         return EGISUI;
     },
 
-    exists: function(path) {
-        return fs.statSync(path).isFile()
+    exists: function(path) {  
+          try{
+            fs.statSync(path);
+          }catch(err){
+            if(err.code == 'ENOENT') return false;
+          }
+          return true;
+        
     },
     sh: function(cmd) {
         return child_process.execSync(cmd).toString('utf8')
