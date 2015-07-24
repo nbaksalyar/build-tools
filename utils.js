@@ -1,33 +1,42 @@
 var os = require('os');
 var fs = require('fs');
-var child_process = require('child_process')
+var child_process = require('child_process');
 
 module.exports = {
 
-    buildDir: function() {
+    buildDir: function () {
         var EGISUI = '../EgisUI/build/';
 
         if (this.exists('./EgisUI.war')) {
-            console.log('Unziping  EgisUI.war')
-            this.sh("mkdir -p build/EgisUI && unzip -o EgisUI.war -d build/EgisUI/")
-            EGISUI = 'build/EgisUI/';              
-        }             
-        
-        console.log(EGISUI)
+            EGISUI = 'build/EgisUI/';
+            this.unzip("./EgisUI.war", EGISUI)
+        }
+
+        console.log(EGISUI);
         return EGISUI;
     },
 
-    exists: function(path) {  
-          try{
-            fs.statSync(path);
-          }catch(err){
-            if(err.code == 'ENOENT') return false;
-          }
-          return true;
-        
+    unzip: function(path, to) {
+
+
+        this.sh("mkdir -p " + to);
+        this.sh("unzip -o " + path + " -d " + to);
+        var count = this.sh("ls -l build/EgisUI | wc -l");
+        console.log('Unzipped ' + count + " files from " + path + " to " + to);
+
     },
-    sh: function(cmd) {
-        return child_process.execSync(cmd).toString('utf8')
+
+    exists: function (path) {
+        try {
+            fs.statSync(path);
+        } catch (err) {
+            if (err.code == 'ENOENT') return false;
+        }
+        return true;
+
+    },
+    sh: function (cmd) {
+        return child_process.execSync(cmd).toString('utf8').trim()
     },
 
 
