@@ -1,0 +1,172 @@
+<project name="Egis Utils" default="default" basedir=".">
+    <property name="project.name" value="egis-utils"/>
+    <property name="javac.target" value="1.8"/>
+
+    <property environment="env"/>
+
+    <path id="test.classpath">
+        <fileset dir="libs">
+            <include name="*.jar"/>
+        </fileset>
+
+        <file directory="bin"/>
+
+
+        <fileset dir="build" erroronmissingdir="false">
+            <include name="*.jar"/>
+        </fileset>
+
+        <fileset dir="test-libs">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+
+    <target name="default" depends="clean,test">
+        <delete dir="bin"/>
+        <mkdir dir="bin"/>
+        <antcall target="clean"/>
+        <antcall target="jar"/>
+        <antcall target="javadoc"/>
+    </target>
+    
+    <target name="deploy" depends="jar">
+        <echo>${env.WORK_DIR}</echo>
+        <delete >
+            <fileset dir="${env.WORK_DIR}/libs" includes="egis-utils*.jar"/>
+        </delete>
+        <copy todir="${env.WORK_DIR}/libs/"  failonerror="false">
+            <fileset dir="build" includes="*.jar"/>
+        </copy>
+    </target>
+
+    <path id="build.classpath">
+        <fileset dir="libs">
+            <include name="*.jar"/>
+        </fileset>
+
+    </path>
+
+    <taskdef name="groovyc"
+             classname="org.codehaus.groovy.ant.Groovyc"
+             classpathref="build.classpath"/>
+
+    <taskdef name="groovy"
+             classname="org.codehaus.groovy.ant.Groovy"
+             classpathref="build.classpath"/>
+
+    <taskdef resource="testngtasks" classpathref="test.classpath"/>
+    <macrodef name="compile">
+
+        <attribute name="src"/>
+        <attribute name="dest"/>
+        <attribute name="classpath"/>
+
+        <sequential>
+            <groovyc srcdir="@{src}" destdir="@{dest}" fork="${fork.groovyc}" >
+                <classpath>
+                    <path refid="@{classpath}"/>
+                </classpath>
+                <javac debug="on" target="${javac.target}" source="${javac.target}"/>
+            </groovyc>
+
+        </sequential>
+    </macrodef>
+
+    <target name="compile.test" depends="compile">
+        <mkdir dir="test"/>
+        <compile src="test" dest="bin" classpath="test.classpath"/>
+
+        <copy todir="bin" overwrite="true">
+            <fileset dir="test">
+                <include name="**\*"/>
+                <exclude name="**\*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="test" depends="compile,compile.test,jar">
+        <delete dir="test-output"/>
+        <testng classpathref="test.classpath"
+                outputDir="test-output"
+                haltOnFailure="true" verbose="2">
+            <xmlfileset dir="." includes="testng.xml">
+            </xmlfileset>
+        </testng>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="api"/>
+        <mkdir dir="src"/>
+        <mkdir dir="bin"/>
+        <mkdir dir="build"/>
+        <javac destdir="bin" srcdir="api" debug="on" failonerror="false" includeantruntime="false" target="${javac.target}" source="${javac.target}">
+            <classpath refid="build.classpath"/>
+        </javac>
+
+        <compile src="src" dest="bin" classpath="build.classpath"/>
+
+        <copy todir="bin">
+            <fileset dir="src">
+                <include name="**\*"/>
+                <exclude name="**\*.java"/>
+            </fileset>
+
+            <fileset dir="api" erroronmissingdir="false">
+                <include name="**\*"/>
+                <exclude name="**\*.java"/>
+            </fileset>
+        </copy>
+
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="build/${project.name}-b${env.BUILD_NUMBER}.jar">
+            <fileset dir="bin">
+                <include name="**\*.*"/>
+                <exclude name="**\*.groovy"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="javadoc">
+        <javadoc destdir="build/javadoc/" classpathref="build.classpath">
+            <sourcepath>
+                <path location="src"/>
+                <path location="api"/>
+            </sourcepath>
+        </javadoc>
+
+        <jar destfile="build/${project.name}-b${env.BUILD_NUMBER}-javadoc.jar">
+            <fileset dir="build/javadoc">
+                <include name="**\*.*"/>
+            </fileset>
+        </jar>
+    </target>
+
+
+    <target name="jar.api">
+        <mkdir dir="../build"/>
+        <mkdir dir="bin/api"/>
+        <mkdir dir="api"/>
+        <javac destdir="bin/api" srcdir="api" debug="on" includeantruntime="false" target="${javac.target}" source="${javac.target}">
+            <classpath refid="build.classpath"/>
+        </javac>
+        <jar destfile="build/${project.name}-api.jar">
+            <fileset dir="bin/api">
+                <include name="**\*.*"/>
+            </fileset>
+        </jar>
+        <delete dir="bin/api"/>
+
+        <copy todir="../build" file="build/${project.name}-api.jar"/>
+    </target>
+
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete dir="bin"/>           
+        <mkdir dir="build"/>
+        <mkdir dir="bin"/>
+    </target>
+</project>
