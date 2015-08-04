@@ -1,0 +1,21 @@
+{
+  "name": "CHANGEME",
+  "mainFile": "CHANGEME",
+  "concatDist": [
+    "src/**/*.js",
+  ],
+  "scripts": {
+    "watch": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ --watch",
+    "deploy-watch": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ deploy --watch",
+    "deploy": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ deploy --env production",
+    "update": "sh node_modules/build-tools/npm-install.sh",
+    "wd": "karma start",
+    "local": "IP=localhost karma start --browsers=Chrome",
+    "test": "karma start --single-run --reporters=junit,dots"
+  },
+  "version": "1.0.0",
+  "devDependencies": {
+    "build-tools": "git+https://github.com/egis/build-tools.git",
+    "gulp": "^3.9.0",
+  }
+}
