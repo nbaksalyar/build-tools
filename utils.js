@@ -1,11 +1,12 @@
 var os = require('os');
 var fs = require('fs');
+var path = require('path');
 var child_process = require('child_process');
 
 module.exports = {
 
     buildDir: function () {
-        var EGISUI = '../EgisUI/build/';
+        var EGISUI = path.normalize('../EgisUI/build/')
 
         if (this.exists('./EgisUI.war')) {
             EGISUI = 'build/EgisUI/';
@@ -15,6 +16,7 @@ module.exports = {
         console.log(EGISUI);
         return EGISUI;
     },
+    
 
     unzip: function(path, to) {
 
@@ -39,6 +41,10 @@ module.exports = {
         return child_process.execSync(cmd).toString('utf8').trim()
     },
 
+
+    defaultPipleline: function(config) {
+
+    },
 
     defaultKarma: function (config) {
 
@@ -93,9 +99,11 @@ module.exports = {
             }
         });
     },
+
     allBrowsers: function () {
         return ['REMOTE-IE11', 'REMOTE-FF', 'REMOTE-Chrome'];
     },
+
     ip: function () {
         var ifaces = os.networkInterfaces();
         var ip;
