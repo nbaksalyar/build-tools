@@ -135,6 +135,7 @@ var build = function(pipe) {
 
 gulp.task('templates', function() {
 	return gulp.src("src/**/*.hbs")	
+		   .pipe(plumber())
 		   .pipe(handlebars())		
 		   .pipe(wrap('Handlebars.template(<%= contents %>)'))
 		   .pipe(declare({
@@ -279,6 +280,7 @@ gulp.task("compile", function() {
 	return gulp.src("src/**/*.js")		
     	.pipe(sourcemaps.init())
 		.pipe(changed(DEST))
+		.pipe(plumber())
 		.pipe(debug())
 		.pipe(jsPipleline())
 		.pipe(sourcemaps.write('.'))
