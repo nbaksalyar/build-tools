@@ -158,7 +158,7 @@ gulp.task('sprites', function() {
     		}))
 })
 gulp.task('sass', function(cb) {
-	return gulp.src(['style/*.sass', 'style/*.scss'])
+	return gulp.src(['style/*.sass', 'style/main.scss'])
 			.pipe(sourcemaps.init())
 			.pipe(sass.sync())
 			.pipe(sourcemaps.write('.'))
@@ -218,8 +218,7 @@ gulp.task("war",  ['bundle', 'resources', 'styles'], function() {
 	del.sync('build/' + pkg.name + ".war")
 	console.log('Deploying to ' + deploy)
 	return gulp.src("build/**/*")
-			.pipe(addsrc("dist/*.png")) // sprites
-			.pipe(gulpif(prod, gzip()))
+			.pipe(addsrc("dist/*.png")) 
 			.pipe(zip(pkg.name + ".war"))
 			.pipe(gulp.dest(deploy))
 })

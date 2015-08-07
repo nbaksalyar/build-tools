@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/egis/build-tools#readme",
   "devDependencies": {
-    "bower-main": "^0.2.14",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-add-src": "^0.2.0",

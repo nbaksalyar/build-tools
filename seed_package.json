@@ -5,11 +5,12 @@
     "src/**/*.js",
   ],
   "scripts": {
-    "watch": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ --watch",
-    "deploy-watch": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ deploy --watch",
-    "deploy": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ deploy --env production",
+    "dev": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ war --watch && gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ --watch",
+    "setup": "npm run update; bower install; npm run dependencies ",
+    "dependencies": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ dependencies --env production",
     "update": "sh node_modules/build-tools/npm-install.sh",
-    "wd": "karma start",
+    "full": "npm run setup && npm run build && npm run test",
+    "build": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ war --env production",
     "local": "IP=localhost karma start --browsers=Chrome",
     "test": "karma start --single-run --reporters=junit,dots"
   },
