@@ -158,22 +158,29 @@ gulp.task('sprites', function() {
     		}))
 })
 gulp.task('sass', function(cb) {
-	return gulp.src('style/*.sass')
+	return gulp.src(['style/*.sass', 'style/*.scss'])
+			.pipe(sourcemaps.init())
 			.pipe(sass.sync())
+			.pipe(sourcemaps.write('.'))
 			.pipe(gulp.dest('dist'))
 });
 
 gulp.task('less', function(cb) {
 	return gulp.src('style/theme.less')
 			.pipe(debug())
+			.pipe(sourcemaps.init())
 			.pipe(less())
+			.pipe(sourcemaps.write('.'))
 			.pipe(gulp.dest('build'))
+			.pipe(livereload())
 
 });
 
 gulp.task('css', function(cb) {
 		return gulp.src(['dist/*.css', 'sprites/build/*.css', 'style/*.css'])
+			.pipe(sourcemaps.init())
 			.pipe(concat(main + ".css"))
+			.pipe(sourcemaps.write('.'))
 			.pipe(addsrc('sprites/build/*.png'))
 			.pipe(gulp.dest('build'))
 			.pipe(gzip())
@@ -231,7 +238,7 @@ gulp.task('resources', function() {
 });
 
 gulp.task("serve", function() {
-	 gulp.src('dist')
+	 gulp.src(['dist', 'build'])
     .pipe(webserver({
       port: port,
       livereload: true,
@@ -251,8 +258,8 @@ gulp.task('clean', function (cb) {
 
 gulp.task("watch", function() {
 	gulp.watch('src/**/*.hbs', ['templates']);
-	gulp.watch('styles/*.sass', ['sass'])
-	gulp.watch('styles/*.less', ['less'])
+	gulp.watch('style/*.sass', ['sass'])
+	gulp.watch('style/**/*.less', ['styles'])
 	gulp.watch('*.html',['war'])
 	gulp.watch('src/**/*.js',['compile'])
 })
