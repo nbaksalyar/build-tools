@@ -53,14 +53,14 @@
     "gulp-riot": "^0.2.17",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.5.2",
-    "gulp-sprite-glue": "^0.1.1",
+    "gulp-glue": "*",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.6",
     "gulp-watch": "^4.3.4",
     "gulp-webserver": "^0.9.1",
     "gulp-wrap": "^0.11.0",
     "gulp-zip": "^3.0.2",
-    "karma": "^0.13.7",
+    "karma": "^0.13.3",
     "lazypipe": "^1.0.1",
     "main-bower-files": "^2.9.0",
     "merge-stream": "^0.1.8",
@@ -71,7 +71,6 @@
     "jasmine-ajax": "^3.1.1",
     "jasmine-core": "^2.3.4",
     "jszip": "^2.5.0",
-    "karma": "^0.13.3",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coffee-preprocessor": "^0.3.0",
     "karma-jasmine": "^0.3.6",
@@ -79,5 +78,8 @@
     "karma-junit-reporter": "^0.3.3",
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webdriver-launcher": "^1.0.4"
+  },
+  "dependencies": {
+    "gulp-rename": "^1.2.2"
   }
 }

@@ -208,7 +208,9 @@ gulp.task('sprites', function (cb) {
 gulp.task('sass', function (cb) {
     return gulp.src(['style/*.sass', 'style/main.scss'])
         .pipe(sourcemaps.init())
-        .pipe(sass.sync())
+        .pipe(sass.sync())  
+        .pipe(replace('/*# sourceMappingURL=../build/', '/*# sourceMappingURL='))      
+        .pipe(replace('/*# sourceMappingURL=main.css.map */', '/*# sourceMappingURL=' + main  +'.css.map */'))        
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist'))
 });
@@ -217,18 +219,21 @@ gulp.task('less', function (cb) {
     return gulp.src('style/theme.less')
         .pipe(debug())
         .pipe(sourcemaps.init())
-        .pipe(less())
+        .pipe(less())        
+        .pipe(replace('/*# sourceMappingURL=../build/', '/*# sourceMappingURL='))
         .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('build'))
+        .pipe(gzip())
         .pipe(gulp.dest('build'))
         .pipe(livereload())
 
 });
 
 gulp.task('css', function (cb) {
-    return gulp.src(['dist/*.css', 'sprites/build/*.css', 'style/*.css'])
-        .pipe(sourcemaps.init())
+    return gulp.src(['dist/*.css', 'sprites/build/*.css', 'style/*.css'], {cwd: 'build'})
+                .pipe(debug())
         .pipe(concat(main + ".css"))
-        .pipe(sourcemaps.write('.'))
+        .pipe(debug())
         .pipe(addsrc('sprites/build/*.png'))
         .pipe(gulp.dest('build'))
         .pipe(gzip())
