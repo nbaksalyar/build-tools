@@ -47,6 +47,7 @@ module.exports = {
     },
 
     defaultKarma: function (config) {
+        this.buildDir()
 
         var webdriverConfig = "http://hub.papertrail.co.za:4444/wd/hub";
         config.set({
@@ -122,4 +123,3 @@ module.exports = {
     }
 };
 
-module.exports.buildDir()
