@@ -3,13 +3,12 @@
 
 * Copy and rename the seed_package.json to package.json
 * Run `npm install` to  install the bootstrap dependencies
-* Run `npm run update` to install all required dependencies
-* Add an alias: `alias build='gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./'`
-* Run `build war` to build everything to build/ and to copy a .war file to your $WORK_DIR/work/webapps dir
-* Run `build war --watch && build --watch`
-
+* Run `npm run setup` to install and build all required dependencies 
+* Run `npm run dev` to  build files suitable for wathcing and startup a watch server
+* Run `npm run build` to build a package suitable for production
+* Run `npm run test` to run karma test suites
+* Optional: Add an alias: `alias build='gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./'`
   
-
 
 ## Build pipeline
 
@@ -44,8 +43,6 @@ Compiles all images into a single sprite call {set}.png sprites can be used like
 ```html
 <span class="sprite-{set}-{filebase}"/>
 ```
-
-
 
 ## Customizing builds using bower.json and package.json
 
@@ -84,4 +81,10 @@ To copy entire directories from dependencies:
   },
 ```
 
+To create a plugin package:
+
+```json
+"plugin": "PortalApp",
+```
+This will create a .zip instead of a .war and place all the compiled .js file in to a subdirectory *System/plugins/{plugin}*
 
