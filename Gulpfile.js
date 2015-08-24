@@ -44,6 +44,7 @@ var resolve = require('gulp-resolve-dependencies');
 var livereload = require('gulp-livereload');
 var path = require('path')
 var utils = require('./utils.js')
+
 var knownOptions = {
     string: 'env',
     default: {
@@ -54,7 +55,7 @@ var knownOptions = {
 };
 
 var deploy = process.env.WORK_DIR;
-if (deploy) {
+if (deploy != null ) {
     deploy += '/work/'
 } else {
     deploy = 'build/'
@@ -118,6 +119,7 @@ bower_concat = function (expr, name, cb) {
     var js = bower()
         .pipe(expr)
         .pipe(filter('**/*.js'))
+        .pipe(debug())
         .pipe(sourcemaps.init())
         .pipe(gulpif(prod, uglify({mangle: false})))
         .pipe(concat(name + '.js'))
@@ -129,7 +131,6 @@ bower_concat = function (expr, name, cb) {
     var css = bower()
         .pipe(expr)
         .pipe(filter('**/*.css'))
-        .pipe(debug())
         .pipe(concat(name + '.css'))
         .pipe(gulp.dest('build'))
         .pipe(gzip())
@@ -207,12 +208,14 @@ gulp.task('sprites', function (cb) {
 })
 gulp.task('sass', function (cb) {
     return gulp.src(['style/*.sass', 'style/main.scss'])
+          .pipe(plumber())
         .pipe(sass.sync())        
         .pipe(gulp.dest('dist'))
 });
 
 gulp.task('less', function (cb) {
     return gulp.src('style/theme.less')
+        .pipe(plumber())
         .pipe(debug())
         .pipe(sourcemaps.init())
         .pipe(less())        
@@ -254,9 +257,13 @@ gulp.task("dependencies", ['resources'], function (cb) {
         bower_concat(filter('**/' + bower_json.standalone [i] + "/**/*"), bower_json.standalone[i])
     }
 
-    _.each(bower_json.directories || {}, function (dir, dep) {
-        var base = "bower_components/" + dep;
-        gulp.src(base + "/" + dir, {base: base}).pipe(gulp.dest('build/'))
+    _.each(bower_json.directories || [], function (dirs, dep) {
+        console.log('coping ' + dirs + " for " + dep)
+
+        _.each(dirs, function(dir) {
+            var base = "bower_components/" + dep;
+            gulp.src(base + "/" + dir, {base: base}).pipe(gulp.dest('build/')) 
+        })    
 
     });
 
@@ -313,7 +320,7 @@ gulp.task('clean', function (cb) {
 
 gulp.task("watch", ['all'], function () {
     gulp.watch('src/**/*.hbs', ['templates']);
-    gulp.watch('style/**/*.*', ['styles']);
+    gulp.watch('style/**/*.*', ['styles', 'package']);
     gulp.watch('*.html', ['package']);
     gulp.watch('src/**/*.js', ['compile']);
     gulp.run('serve')
@@ -361,11 +368,4 @@ gulp.task("compile", function () {
 
 });
 
-gulp.task('default', ['serve', 'watch']);
-
-gulp.task("deploy", function (cb) {
-    runSequence('clean', 'templates', ['compile', 'dependencies', 'resources', 'styles'], 'bundle', 'war', function () {
-        gulp.run('war')
-    })
-});
-
+gulp.task('default', ['watch']);
