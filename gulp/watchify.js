@@ -30,8 +30,7 @@ module.exports = function(name)
             .pipe(buffer())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('./dist'))
-            .pipe(connect.reload());
+            .pipe(gulp.dest('./dist'));
     }
 };
 

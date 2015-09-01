@@ -314,8 +314,7 @@ gulp.task('bundle', ['compile', 'templates'], function () {
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat(pkg.name + '.js'))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('build'))
-        .pipe(connect.reload());
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('all', ['bundle', 'styles', 'resources']);
