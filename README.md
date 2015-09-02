@@ -1,6 +1,19 @@
 # Gulp based builds.
 
+## for MacOS users:
+```shell
+# install 'native' (not Apple-supplied) Python to be able to install 'glue' tool:
+brew install python
 
+# install 'glue' tool needed by build:
+brew install jpeg
+pip install glue
+
+# install Karma globally for tests to start:
+npm install -g karma-cli
+```
+
+## Build steps:
 * Copy and rename the seed_package.json to package.json
 * Run `npm install` to  install the bootstrap dependencies
 * Run `npm run setup` to install and build all required dependencies 
