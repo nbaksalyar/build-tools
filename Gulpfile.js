@@ -146,8 +146,7 @@ gulp.task('templates', ['partials'], function () {
             root: 'window'
         }))
         .pipe(flatten())
-        .pipe(gulp.dest('dist/templates'))
-        .pipe(connect.reload())
+        .pipe(gulp.dest('dist/templates'));
 
 });
 
@@ -200,7 +199,7 @@ gulp.task('sprites', function (cb) {
 });
 
 gulp.task('sass', function (cb) {
-    return gulp.src(['style/*.sass', 'style/main.scss'])
+    return gulp.src(['style/*.sass', 'style/*.scss', 'style/main.scss'])
           .pipe(plumber())
         .pipe(sass.sync())
         .pipe(gulp.dest('dist'))

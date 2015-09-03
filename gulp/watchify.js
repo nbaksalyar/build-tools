@@ -5,7 +5,6 @@ var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var buffer = require('vinyl-buffer');
 var assign = require('lodash.assign');
-var connect = require('gulp-connect');
 var sourcemaps = require('gulp-sourcemaps');
 
 module.exports = function(name)
