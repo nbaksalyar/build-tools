@@ -311,8 +311,9 @@ gulp.task('watch', ['package'], function () {
 gulp.task('bundle', ['compile', 'templates'], function () {
     return gulp.src(['dist/' + pkg.name + '.js', 'dist/templates/*.js'])
         .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(gulpif(prod, uglify({mangle: false})))
         .pipe(concat(pkg.name + '.js'))
-        .pipe(sourcemaps.write())
+        .pipe(sourcemaps.write('.', {includeContent: !prod}))
         .pipe(gulp.dest('build'));
 });
 
