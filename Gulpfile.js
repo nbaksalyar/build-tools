@@ -278,7 +278,7 @@ gulp.task("package", ['all'], function () {
     var file = pkg.name + (pkg.plugin ? ".zip" : ".war");
     del.sync('build/' + file)
     console.log('Deploying to ' + deploy + "/" + file)
-    return gulp.src(["build/**/*", '!**/' + file])
+    return gulp.src(["build/**/*", '!**/' + file, '!build/' + pkg.name + '/**/*'])
         .pipe(addsrc("dist/*.png"))
         .pipe(gulpif(pkg.plugin != null, rename({dirname: "System/plugins/" + pkg.plugin})))
         .pipe(zip(file))
