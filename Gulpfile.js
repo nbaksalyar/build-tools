@@ -266,6 +266,35 @@ gulp.task("dependencies", ['resources'], function (cb) {
     }
 });
 
+
+
+gulp.task("plugin_compile", ['all'], function(cb) {
+    del.sync('build/tmp/');
+    
+
+
+
+   return gulp.src("build/*.js")
+        .pipe( rename({dirname: "System/plugins/" + pkg.plugin}))
+        .pipe(gulp.dest('build/tmp'))
+        .pipe(addsrc('install.groovy'))
+        .pipe(filter('install.groovy'))
+        .pipe( rename({dirname: "PT-SCRIPTS"}))
+        .pipe(gulp.dest('build/tmp'))
+        .pipe(addsrc('resources/**/*'))
+        .pipe(gulp.dest('build/tmp/'))
+  
+});
+
+gulp.task("plugin", ['plugin_compile'], function () {
+    var file = pkg.name + (pkg.plugin ? ".zip" : ".war");
+    console.log('Deploying plugin to ' + deploy + "/" + file)
+    return gulp.src("build/tmp/**/*")   
+        .pipe(zip(file))
+        .pipe(gulp.dest(deploy))    
+        .pipe(gulp.dest('.'))
+})
+
 gulp.task("package", ['all'], function () {
     var file = pkg.name + (pkg.plugin ? ".zip" : ".war");
     del.sync('build/' + file);
