@@ -1,8 +1,9 @@
 var os = require('os');
 var fs = require('fs');
 var path = require('path');
-var child_process = require('child_process');
 var argv = require('optimist').argv;
+var mkdirp = require('mkdirp');
+var unzip = require('unzip');
 
 module.exports = {
 
@@ -20,11 +21,9 @@ module.exports = {
     
 
     unzip: function(path, to) {
-        this.sh("mkdir -p " + to);
-        this.sh("unzip -o " + path + " -d " + to);
-        var count = this.sh("ls -l build/EgisUI | wc -l");
-        console.log('Unzipped ' + count + " files from " + path + " to " + to);
 
+        mkdirp(to);
+        fs.createReadStream(path).pipe(unzip.Extract({ path: to }));
     },
 
     exists: function (path) {
@@ -34,14 +33,6 @@ module.exports = {
             if (err.code == 'ENOENT') return false;
         }
         return true;
-
-    },
-    sh: function (cmd) {
-        return child_process.execSync(cmd).toString('utf8').trim()
-    },
-
-
-    defaultPipleline: function(config) {
 
     },
 

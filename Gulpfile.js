@@ -37,6 +37,7 @@ var utils = require('./utils.js');
 var webserver = require('./gulp/webserver');
 var watchify = require('./gulp/watchify');
 var os = require('os');
+var exit = require('gulp-exit');
 
 var knownOptions = {
     string: 'env',
@@ -166,8 +167,7 @@ gulp.task('partials', function () {
             }
         }))
         .pipe(concat('partials.js'))
-        .pipe(gulp.dest('dist/templates'))
-        .pipe(connect.reload());
+        .pipe(gulp.dest('dist/templates'));
 });
 
 gulp.task('sprites', function (cb) {
@@ -200,7 +200,7 @@ gulp.task('sprites', function (cb) {
 
 gulp.task('sass', function (cb) {
     return gulp.src(['style/*.sass', 'style/*.scss', 'style/main.scss'])
-          .pipe(plumber())
+        .pipe(plumber())
         .pipe(sass.sync())
         .pipe(gulp.dest('dist'))
 });
@@ -221,7 +221,7 @@ gulp.task('less', function (cb) {
 
 gulp.task('css', function (cb) {
     return gulp.src(['dist/*.css', 'sprites/build/*.css', 'style/*.css'])
-                .pipe(debug())
+        .pipe(debug())
         .pipe(concat(main + ".css"))
         .pipe(debug())
         .pipe(addsrc('sprites/build/*.*'))
@@ -270,12 +270,13 @@ gulp.task("package", ['all'], function () {
     var file = pkg.name + (pkg.plugin ? ".zip" : ".war");
     del.sync('build/' + file);
     console.log('Deploying to ' + deploy + "/" + file);
-    return gulp.src("build/**/*")
+    return gulp.src(["build/**/*", '!**/' + file, '!build/' + pkg.name + '/**/*'])
         .pipe(addsrc("dist/*.png"))
         .pipe(gulpif(pkg.plugin != null, rename({dirname: "System/plugins/" + pkg.plugin})))
         .pipe(zip(file))
         .pipe(gulp.dest(deploy))
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('.'))
+        .pipe(gulpif(prod, exit()));
 });
 
 gulp.task('resources', function () {
@@ -314,7 +315,8 @@ gulp.task('bundle', ['compile', 'templates'], function () {
         .pipe(gulpif(prod, uglify({mangle: false})))
         .pipe(concat(pkg.name + '.js'))
         .pipe(sourcemaps.write('.', {includeContent: !prod}))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build'))
+        .pipe(connect.reload());
 });
 
 gulp.task('all', ['bundle', 'styles', 'resources']);
