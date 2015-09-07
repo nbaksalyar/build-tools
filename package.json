@@ -1,4 +1,3 @@
-{
   "name": "build-tools",
   "version": "1.0.0",
   "description": "",
@@ -46,6 +45,7 @@
     "gulp-ignore": "^1.2.1",
     "gulp-karma": "0.0.4",
     "gulp-less": "^3.0.3",
+    "gulp-livereload": "",
     "gulp-main-bower-files": "^1.2.0",
     "gulp-match": "^0.2.1",
     "gulp-minify-css": "^1.2.0",
