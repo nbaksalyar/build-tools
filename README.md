@@ -15,7 +15,6 @@ npm install -g karma-cli
 
 ## Build steps:
 * Copy and rename the seed_package.json to package.json
-* Run `npm install` to  install the bootstrap dependencies
 * Run `npm run setup` to install and build all required dependencies 
 * Run `npm run dev` to  build files suitable for wathcing and startup a watch server
 * Run `npm run build` to build a package suitable for production

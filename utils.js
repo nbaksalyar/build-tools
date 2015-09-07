@@ -1,12 +1,14 @@
 var os = require('os');
 var fs = require('fs');
 var path = require('path');
-var child_process = require('child_process');
+var argv = require('optimist').argv;
+var mkdirp = require('mkdirp');
+var unzip = require('unzip');
 
 module.exports = {
 
     buildDir: function () {
-        var EGISUI = path.normalize('../EgisUI/build/')
+        var EGISUI = path.normalize('../EgisUI/build/');
 
         if (this.exists('./EgisUI.war')) {
             EGISUI = 'build/EgisUI/';
@@ -20,12 +22,8 @@ module.exports = {
 
     unzip: function(path, to) {
 
-
-        this.sh("mkdir -p " + to);
-        this.sh("unzip -o " + path + " -d " + to);
-        var count = this.sh("ls -l build/EgisUI | wc -l");
-        console.log('Unzipped ' + count + " files from " + path + " to " + to);
-
+        mkdirp(to);
+        fs.createReadStream(path).pipe(unzip.Extract({ path: to }));
     },
 
     exists: function (path) {
@@ -37,26 +35,19 @@ module.exports = {
         return true;
 
     },
-    sh: function (cmd) {
-        return child_process.execSync(cmd).toString('utf8').trim()
-    },
-
-
-    defaultPipleline: function(config) {
-
-    },
 
     defaultKarma: function (config) {
-        this.buildDir()
+        this.buildDir();
+        var hostname = argv.host || process.env['IP'] || this.ip();
 
         var webdriverConfig = "http://hub.papertrail.co.za:4444/wd/hub";
         config.set({
             junitReporter: {
-                outputDir: 'test-output/', // results will be saved as $outputDir/$browserName.xml
+                outputDir: 'test-output/' // results will be saved as $outputDir/$browserName.xml
                 //outputFile: undefined // if included, results will be saved as $outputDir/$browserName/$outputFile
                 //suite: ''
             },
-            hostname: process.env['IP'] || this.ip(),
+            hostname: hostname.split(' ').join(''),
             basePath: '',
             frameworks: ['jasmine-jquery', 'jasmine'],
             exclude: [],

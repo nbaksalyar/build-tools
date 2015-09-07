@@ -2,21 +2,21 @@
   "name": "CHANGEME",
   "mainFile": "CHANGEME",
   "concatDist": [
-    "src/**/*.js",
+    "src/**/*.js"
   ],
   "scripts": {
-    "dev": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ package --watch && gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ watch --watch",
-    "setup": "npm run update; bower install; npm run dependencies ",
+    "dev": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ watch --watch",
+    "setup": "npm install && npm run update && bower install && npm run dependencies",
     "dependencies": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ dependencies --env production",
     "update": "sh node_modules/build-tools/npm-install.sh",
     "full": "npm run setup && npm run build && npm run test",
     "build": "gulp --gulpfile node_modules/build-tools/Gulpfile.js --cwd ./ package --env production",
-    "local": "IP=localhost karma start --browsers=Chrome",
+    "local": "karma start --browsers=Chrome --host=localhost",
     "test": "karma start --single-run --reporters=junit,dots"
   },
   "version": "1.0.0",
   "devDependencies": {
-    "build-tools": "git+https://github.com/egis/build-tools.git",
-    "gulp": "^3.9.0",
+    "build-tools": "egis/build-tools.git",
+    "gulp": "^3.9.0"
   }
 }
