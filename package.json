@@ -55,6 +55,7 @@
     "gulp-remember": "^0.3.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
+    "gulp-pseudoconcat-js": "git+https://github.com/egis/gulp-pseudoconcat-js.git",
     "gulp-resolve-dependencies": "^2.1.0",
     "gulp-riot": "^0.2.17",
     "gulp-sass": "^2.0.4",
