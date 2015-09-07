@@ -1,8 +1,9 @@
-var glue = require("gulp-sprite-glue");
+var glue = require("gulp-glue");
 var gulp = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var babel = require('gulp-babel');
 var concat = require('gulp-concat');
+var changed = require('gulp-changed');
 var coffee = require('gulp-coffee');
 var del = require('del');
 var gutil = require('gulp-util');
@@ -24,6 +25,10 @@ var ignore = require('gulp-ignore');
 var connect = require('gulp-connect');
 var _ = require('underscore');
 var runSequence = require('run-sequence');
+var resolve = require('gulp-resolve-dependencies');
+var livereload = require('gulp-livereload');
+var pseudoconcat = require('gulp-pseudoconcat-js');
+var gulpWebserver = require('gulp-webserver');
 var handlebars = require('gulp-handlebars');
 var wrap = require('gulp-wrap');
 var declare = require('gulp-declare');
@@ -90,6 +95,14 @@ var replaceAll = lazypipe()
     .pipe(function () {
         return replace('@@timestamp', new Date().toString())
     });
+
+var jsPipleline = lazypipe()       
+    .pipe(plumber)     
+    .pipe(babel)       
+    .pipe(replaceAll)      
+    .pipe(addsrc, 'dist/templates/*.js')       
+       
+var compile_handlerbars = lazypipe()
 
 var bower = function () {
     if (_.size(bower.overrides) > 0) {
@@ -270,11 +283,7 @@ gulp.task("dependencies", ['resources'], function (cb) {
 
 gulp.task("plugin_compile", ['all'], function(cb) {
     del.sync('build/tmp/');
-    
-
-
-
-   return gulp.src("build/*.js")
+    return gulp.src("build/*.js")
         .pipe( rename({dirname: "System/plugins/" + pkg.plugin}))
         .pipe(gulp.dest('build/tmp'))
         .pipe(addsrc('install.groovy'))
@@ -321,7 +330,63 @@ gulp.task('resources', function () {
 
 });
 
-gulp.task("webserver", webserver(port));
+
+gulp.task("serve", function () {     
+    gulp.src(['dist', 'build'])        
+        .pipe(gulpWebserver({      
+            port: port,        
+            livereload: true,      
+            directoryListing: true,        
+            open: false        
+        }));       
+})     
+
+var DEST = 'dist';
+gulp.task("compile", function () {
+    return gulp.src("src/**/*.js")
+        .pipe(sourcemaps.init())
+        .pipe(changed(DEST))
+        .pipe(plumber())
+        .pipe(debug())
+        .pipe(jsPipleline())
+        .pipe(sourcemaps.write('.', {sourceMappingURLPrefix: './../'}))
+        .pipe(gulp.dest('dist/'))
+        .pipe(livereload())
+
+});
+
+
+gulp.task('bundle', ['compile', 'templates'], function () {
+    var dist = [];
+    _.each(SOURCES, function (it) {
+        dist.push(it.replace('src/', 'dist/'))
+    })
+
+    return gulp.src(["dist/**/*.js", "dist/templates/*.js"])
+        .pipe(resolve())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(gulpif(prod, uglify({mangle: false})))
+        .pipe(gulpif(options.watch, pseudoconcat(main + ".js", {
+            webRoot: 'src',
+            host: 'http://localhost:' + port + '/'
+        }), concat(main + ".js")))
+        .pipe(gulpif(options.watch, replace('/dist/', '/')))
+        .pipe(gulpif(options.watch, replace('http://localhost:' + port + '/../', 'http://localhost:' + port + '/')))
+        .pipe(sourcemaps.write('.', {includeContent: !prod}))
+        .pipe(debug())
+        .pipe(replace('//# sourceMappingURL=../build/', '//# sourceMappingURL='))
+        .pipe(gulp.dest('build/'))
+        .pipe(gzip())
+        .pipe(gulp.dest('build/'));
+});
+
+gulp.task("watch", ['all'], function () {
+    gulp.watch('src/**/*.hbs', ['templates']);
+    gulp.watch('style/**/*.*', ['styles', 'package']);
+    gulp.watch('*.html', ['package']);
+    gulp.watch('src/**/*.js', ['compile']);
+    gulp.run('serve')
+});
 
 gulp.task('clean', function (cb) {
     return del([
@@ -331,14 +396,14 @@ gulp.task('clean', function (cb) {
 });
 
 
-gulp.task('watch', ['package'], function () {
-    gulp.watch(['src/**/*.hbs', 'src/**/*.js'], ['bundle']);
+gulp.task('watchify', ['package'], function () {
+    gulp.watch(['src/**/*.hbs', 'src/**/*.js'], ['bundle-new']);
     gulp.watch('style/**/*.*', ['styles', 'package']);
     gulp.watch('*.html', ['package']);
     gulp.run('webserver');
 });
 
-gulp.task('bundle', ['compile', 'templates'], function () {
+gulp.task('bundle-new', ['compile-new', 'templates'], function () {
     return gulp.src(['dist/' + pkg.name + '.js', 'dist/templates/*.js'])
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(gulpif(prod, uglify({mangle: false})))
@@ -349,5 +414,5 @@ gulp.task('bundle', ['compile', 'templates'], function () {
 });
 
 gulp.task('all', ['bundle', 'styles', 'resources']);
-gulp.task("compile", watchify(pkg.name));
+gulp.task("compile-new", watchify(pkg.name));
 gulp.task('default', ['watch']);
