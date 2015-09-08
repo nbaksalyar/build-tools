@@ -70,6 +70,7 @@ module.exports = {
     deploy: deploy,
     pkg: pkg,
     bowerJson: bowerJson,
+    watch: options.watch,
     prod: options.env === 'production',
     main: main,
     replaceAll: replaceAll

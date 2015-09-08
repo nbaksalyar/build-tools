@@ -10,7 +10,6 @@ var pack = require('./gulp/package');
 var bundle = require('./gulp/bundle');
 var partials = require('./gulp/partials');
 var templates = require('./gulp/templates');
-var concat = require('./gulp/concat');
 var watchify = require('./gulp/watchify');
 var webserver = require('./gulp/webserver');
 var watch = require('./gulp/watch');
@@ -21,7 +20,6 @@ gulp.task('resources', resources);
 gulp.task('dependencies', ['resources'], bower);
 gulp.task('package', ['all'], pack);
 gulp.task('all', ['bundle', 'styles', 'resources']);
-gulp.task('bundle', ['compile', 'partials'], bundle);
 gulp.task('templates', ['partials'], templates);
 gulp.task('partials', partials);
 gulp.task('watch', watch);
@@ -30,9 +28,10 @@ gulp.task('default', ['package', 'webserver', 'watch']);
 
 if (argv.concat)
 {
-    gulp.task('compile', concat);
+    require('./gulp/concat')
 }
 else
 {
+    require('./gulp/bundle')
     gulp.task('compile', watchify);
 }
