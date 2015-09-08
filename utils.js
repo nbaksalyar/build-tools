@@ -4,6 +4,7 @@ var path = require('path');
 var argv = require('optimist').argv;
 var mkdirp = require('mkdirp');
 var unzip = require('unzip');
+var child_process = require('child_process');
 
 module.exports = {
 
@@ -23,8 +24,12 @@ module.exports = {
     unzip: function(path, to) {
 
         mkdirp(to);
-        fs.createReadStream(path).pipe(unzip.Extract({ path: to }));
+        this.sh("unzip -o " + path + " -d " + to);
     },
+
+     sh: function (cmd) {
+         return child_process.execSync(cmd).toString('utf8').trim()              
+     },        
 
     exists: function (path) {
         try {
