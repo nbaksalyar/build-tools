@@ -4,7 +4,8 @@
   "description": "",
   "main": "utils.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "gem install sass"
   },
   "repository": {
     "type": "git",
@@ -62,6 +63,7 @@
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webdriver-launcher": "^1.0.4",
     "lazypipe": "^1.0.1",
+    "node-sass": "",
     "lodash.assign": "^3.2.0",
     "merge-stream": "^1.0.0",
     "minimist": "^1.2.0",

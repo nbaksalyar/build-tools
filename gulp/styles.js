@@ -24,7 +24,7 @@ gulp.task('styles', ['less', 'sass', 'css'], function (done)
 
 gulp.task('sass', function ()
 {
-    return gulp.src(['style/!_*.sass', 'style/!_*.scss'])
+    return gulp.src(['style/*.sass', 'style/*.scss'])
         .pipe(plumber())
         .pipe(sass.sync())
         .pipe(gulp.dest('dist'))
@@ -32,7 +32,7 @@ gulp.task('sass', function ()
 
 gulp.task('less', function ()
 {
-    return gulp.src('style/!_*.less')
+    return gulp.src('style/theme.less')
         .pipe(plumber())
         .pipe(debug())
         .pipe(sourcemaps.init())
