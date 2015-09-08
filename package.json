@@ -51,6 +51,8 @@
     "gulp-util": "^3.0.6",
     "gulp-wrap": "^0.11.0",
     "gulp-zip": "^3.0.2",
+    "fakey": "~0.0.8",
+    "jasmine-ajax": "^3.1.1",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.9",
     "karma-browserify": "^4.3.0",
