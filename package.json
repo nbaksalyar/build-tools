@@ -35,6 +35,7 @@
     "gulp-filter": "^3.0.1",
     "gulp-flatten": "^0.2.0",
     "gulp-gzip": "^1.2.0",
+    "gulp-glue": "",
     "gulp-handlebars": "^4.0.0",
     "gulp-if": "^1.2.5",
     "gulp-ignore": "^1.2.1",
