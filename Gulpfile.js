@@ -212,14 +212,14 @@ gulp.task('sprites', function (cb) {
 });
 
 gulp.task('sass', function (cb) {
-    return gulp.src(['style/*.sass', 'style/*.scss', 'style/main.scss'])
+    return gulp.src(['style/!_*.sass', 'style/!_*.scss'])
         .pipe(plumber())
         .pipe(sass.sync())
         .pipe(gulp.dest('dist'))
 });
 
 gulp.task('less', function (cb) {
-    return gulp.src('style/theme.less')
+    return gulp.src('style/!_*.less')
         .pipe(plumber())
         .pipe(debug())
         .pipe(sourcemaps.init())
