@@ -12,7 +12,7 @@ var less = require('gulp-less');
 var concat = require('gulp-concat');
 var replace = require('gulp-replace');
 var addsrc = require('gulp-add-src');
-var connect = require('gulp-connect')
+var connect = require('gulp-connect');
 
 var main = require('./common').main;
 
@@ -24,7 +24,7 @@ gulp.task('styles', ['less', 'sass', 'css'], function (done)
 
 gulp.task('sass', function ()
 {
-    return gulp.src(['style/*.sass', 'style/*.scss', 'style/main.scss'])
+    return gulp.src(['style/!_*.sass', 'style/!_*.scss'])
         .pipe(plumber())
         .pipe(sass.sync())
         .pipe(gulp.dest('dist'))
@@ -32,7 +32,7 @@ gulp.task('sass', function ()
 
 gulp.task('less', function ()
 {
-    return gulp.src('style/theme.less')
+    return gulp.src('style/!_*.less')
         .pipe(plumber())
         .pipe(debug())
         .pipe(sourcemaps.init())

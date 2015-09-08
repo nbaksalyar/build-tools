@@ -28,8 +28,6 @@ gulp.task('watch', watch);
 gulp.task('webserver', webserver(8100));
 gulp.task('default', ['package', 'webserver', 'watch']);
 
-console.log('concat: ', argv.concat);
-
 if (argv.concat)
 {
     gulp.task('compile', concat);
