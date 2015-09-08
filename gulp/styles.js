@@ -2,6 +2,8 @@
  * Created by Nikolay Glushchenko <nick@nickalie.com> on 08.09.2015.
  */
 
+
+var glue = require("gulp-glue");
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 var debug = require('gulp-debug');
@@ -13,6 +15,9 @@ var concat = require('gulp-concat');
 var replace = require('gulp-replace');
 var addsrc = require('gulp-add-src');
 var connect = require('gulp-connect');
+var os = require('os');
+var utils = require('../utils')
+var del = require('del');
 
 var main = require('./common').main;
 
@@ -56,3 +61,30 @@ gulp.task('css', ['less', 'sass'], function ()
         .pipe(gulp.dest('build'))
 });
 
+gulp.task('sprites', function (cb) {
+
+    //TODO sprites task hangs on windows
+    //need to find workaround
+    if (os.platform().indexOf('win') === 0)
+    {
+        cb();
+    }
+
+    if (!utils.exists('sprites/')) {
+        cb();
+        return;
+    }
+    del.sync("sprites/build/*");
+
+    return gulp.src(['sprites/**/*'])
+        .pipe(glue({
+            url: './',
+            recursive: true,
+            source: './sprites/',
+            quiet: true,
+            output: './sprites/build/',
+            css: 'sprites/build/'
+        }, function () {
+            cb();
+        }))
+});
