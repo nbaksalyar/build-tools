@@ -3,15 +3,16 @@ var fs = require('fs');
 var path = require('path');
 var argv = require('optimist').argv;
 var mkdirp = require('mkdirp');
-var unzip = require('unzip');
 var child_process = require('child_process');
 
 module.exports = {
 
-    buildDir: function () {
+    buildDir: function ()
+    {
         var EGISUI = path.normalize('../EgisUI/build/');
 
-        if (this.exists('./EgisUI.war')) {
+        if (this.exists('./EgisUI.war'))
+        {
             EGISUI = 'build/EgisUI/';
             this.unzip("./EgisUI.war", EGISUI)
         }
@@ -19,29 +20,39 @@ module.exports = {
         console.log(EGISUI);
         return EGISUI;
     },
-    
 
-    unzip: function(path, to) {
+
+    unzip: function (path, to)
+    {
 
         mkdirp(to);
         this.sh("unzip -o " + path + " -d " + to);
     },
 
-     sh: function (cmd) {
-         return child_process.execSync(cmd).toString('utf8').trim()              
-     },        
+    sh: function (cmd)
+    {
+        return child_process.execSync(cmd).toString('utf8').trim()
+    },
 
-    exists: function (path) {
-        try {
+    exists: function (path)
+    {
+        try
+        {
             fs.statSync(path);
-        } catch (err) {
-            if (err.code == 'ENOENT') return false;
+        }
+        catch (err)
+        {
+            if (err.code == 'ENOENT')
+            {
+                return false;
+            }
         }
         return true;
 
     },
 
-    defaultKarma: function (config) {
+    defaultKarma: function (config)
+    {
         this.buildDir();
         var hostname = argv.host || process.env['IP'] || this.ip();
 
@@ -67,7 +78,8 @@ module.exports = {
                     sourceMap: true
                 },
                 // transforming the filenames
-                transformPath: function (path) {
+                transformPath: function (path)
+                {
                     return path.replace(/\.coffee$/, '.js')
                 }
             },
@@ -97,17 +109,22 @@ module.exports = {
         });
     },
 
-    allBrowsers: function () {
+    allBrowsers: function ()
+    {
         return ['REMOTE-IE11', 'REMOTE-FF', 'REMOTE-Chrome'];
     },
 
-    ip: function () {
+    ip: function ()
+    {
         var ifaces = os.networkInterfaces();
         var ip;
-        Object.keys(ifaces).forEach(function (ifname) {
-            ifaces[ifname].forEach(function (iface) {
+        Object.keys(ifaces).forEach(function (ifname)
+        {
+            ifaces[ifname].forEach(function (iface)
+            {
 
-                if ('IPv4' !== iface.family || iface.internal !== false || iface.address.startsWith('172')) {
+                if ('IPv4' !== iface.family || iface.internal !== false || iface.address.startsWith('172'))
+                {
                     // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
                     return;
                 }

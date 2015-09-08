@@ -6,11 +6,11 @@ var watchify = require('watchify');
 var buffer = require('vinyl-buffer');
 var assign = require('lodash.assign');
 var sourcemaps = require('gulp-sourcemaps');
+var plumber = require('gulp-plumber');
+var pkg = require('./common').pkg;
 
-module.exports = function(name)
+module.exports = function()
 {
-    return function()
-    {
         var customOpts = {
             entries: ['src/index.js'],
             debug: true
@@ -24,18 +24,10 @@ module.exports = function(name)
         );
 
         return watchifyBundle.bundle()
-            .on('error', errorHandler)
-            .pipe(source(name + '.js'))
+            .pipe(plumber())
+            .pipe(source(pkg.name + '.js'))
             .pipe(buffer())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist'));
-    }
 };
-
-function errorHandler(error)
-{
-    console.error('Watchify Error:');
-    console.error(error);
-    this.emit('end');
-}

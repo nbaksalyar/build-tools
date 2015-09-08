@@ -3,7 +3,10 @@ var gulp = require('gulp');
 module.exports = function ()
 {
     gulp.watch([
-            'src/**/*.js*'
+            'src/**/*.js*',
+            'src/**/*.hbs'
         ],
-        ['watchify']);
+        ['bundle']);
+
+    gulp.watch('style/**/*.*', ['styles']);
 };
