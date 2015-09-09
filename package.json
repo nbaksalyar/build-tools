@@ -42,6 +42,7 @@
     "gulp-less": "^3.0.3",
     "gulp-main-bower-files": "^1.2.1",
     "gulp-plumber": "^1.0.1",
+    "gulp-pseudoconcat-js": "egis/gulp-pseudoconcat-js",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-resolve-dependencies": "^2.1.0",
