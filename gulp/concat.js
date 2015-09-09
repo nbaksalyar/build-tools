@@ -18,6 +18,7 @@ var _ = require('underscore')
 var uglify = require('gulp-uglify');
 var gulpif = require('gulp-if');
 var concat = require('gulp-concat');
+var webserver = require('gulp-webserver');
 var replace = require('gulp-replace');
 var gzip = require('gulp-gzip');
 
@@ -26,6 +27,7 @@ var jsPipleline = lazypipe()
     .pipe(babel)
     .pipe(common.replaceAll)
     .pipe(addsrc, 'dist/templates/*.js');
+
 gulp.task("compile", function () {
     return gulp.src("src/**/*.js")
         .pipe(sourcemaps.init())
@@ -36,8 +38,25 @@ gulp.task("compile", function () {
         .pipe(sourcemaps.write('.', {sourceMappingURLPrefix: './../'}))
         .pipe(gulp.dest('dist/'))
         .pipe(connect.reload())
-
 });
+
+var port = common.pkg.port || 8101;
+var main = common.pkg.mainFile;
+console.log('port=' + port);
+console.log('main=' + main);
+
+
+gulp.task("serve", function () {
+    gulp.src(['dist', 'build'])
+        .pipe(webserver({
+            port: port ,
+            livereload: true,
+            directoryListing: true,
+            open: false
+        }));
+})
+
+
 
 
 gulp.task('bundle', ['compile', 'templates'], function () {
@@ -50,12 +69,12 @@ gulp.task('bundle', ['compile', 'templates'], function () {
         .pipe(resolve())
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(gulpif(common.prod, uglify({mangle: false})))
-        .pipe(gulpif(common.watch, pseudoconcat(common.pkg.mainFile + ".js", {
+        .pipe(gulpif(common.watch, pseudoconcat(main + ".js", {
             webRoot: 'src',
-            host: 'http://localhost:' + common.pkg.port + '/'
-        }), concat( common.pkg.mainFile + ".js")))
+            host: 'http://localhost:' + port + '/'
+        }), concat( main + ".js")))
         .pipe(gulpif(common.watch, replace('/dist/', '/')))
-        .pipe(gulpif(common.watch, replace('http://localhost:' +  common.pkg.port  + '/../', 'http://localhost:' +  common.pkg.port  + '/')))
+        .pipe(gulpif(common.watch, replace('http://localhost:' +  port  + '/../', 'http://localhost:' +  port  + '/')))
         .pipe(sourcemaps.write('.', {includeContent: !common.prod}))
         .pipe(debug())
         .pipe(replace('//# sourceMappingURL=../build/', '//# sourceMappingURL='))

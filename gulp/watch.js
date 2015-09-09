@@ -9,4 +9,5 @@ module.exports = function ()
         ['bundle']);
 
     gulp.watch('style/**/*.*', ['styles']);
+    gulp.run('serve')
 };
