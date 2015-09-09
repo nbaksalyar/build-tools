@@ -50,10 +50,10 @@ gulp.task('bundle', ['compile', 'templates'], function () {
         .pipe(resolve())
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(gulpif(common.prod, uglify({mangle: false})))
-        .pipe(gulpif(common.watch, pseudoconcat(common.pkg.mainFile.main + ".js", {
+        .pipe(gulpif(common.watch, pseudoconcat(common.pkg.mainFile + ".js", {
             webRoot: 'src',
             host: 'http://localhost:' + common.pkg.port + '/'
-        }), concat( common.pkg.mainFile+ ".js")))
+        }), concat( common.pkg.mainFile + ".js")))
         .pipe(gulpif(common.watch, replace('/dist/', '/')))
         .pipe(gulpif(common.watch, replace('http://localhost:' +  common.pkg.port  + '/../', 'http://localhost:' +  common.pkg.port  + '/')))
         .pipe(sourcemaps.write('.', {includeContent: !common.prod}))
