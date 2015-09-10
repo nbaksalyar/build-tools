@@ -38,7 +38,9 @@ else
 gulp.task('watch',function() {
 	if (argv.concat) {
  		gulp.watch('src/**/*.js', ['compile']);
- 	}
+ 	} else {
+        gulp.watch('src/**/*.js', ['bundle']);
+    }
   	gulp.watch('src/**/*.hbs', ['templates']);
     gulp.watch('style/**/*.*', ['styles']);
     gulp.run('webserver')
