@@ -36,11 +36,11 @@ else
 }
 
 gulp.task('watch',function() {
+	if (argv.concat) {
+ 		gulp.watch('src/**/*.js', ['compile']);
+ 	}
   	gulp.watch('src/**/*.hbs', ['templates']);
     gulp.watch('style/**/*.*', ['styles']);
     gulp.run('webserver')
 });
 
-if (argv.watch) {
-  	gulp.run('watch')
-}

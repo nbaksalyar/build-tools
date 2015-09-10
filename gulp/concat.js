@@ -44,6 +44,7 @@ var port = common.pkg.port || 8101;
 var main = common.pkg.mainFile;
 console.log('port=' + port);
 console.log('main=' + main);
+console.log('watch=' + common.watch);
 
 
 gulp.task("webserver", function () {
