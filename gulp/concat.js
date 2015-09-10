@@ -3,6 +3,7 @@
  */
 
 var gulp = require('gulp');
+var filter = require('gulp-filter');
 var sourcemaps = require('gulp-sourcemaps');
 var debug = require('gulp-debug');
 var connect = require('gulp-connect');
@@ -24,7 +25,12 @@ var gzip = require('gulp-gzip');
 
 var jsPipleline = lazypipe()
     .pipe(plumber)
-    .pipe(babel)
+    .pipe(function() { 
+        return babel({
+        highlightCode: true,
+        modules: 'ignore'
+        })
+    })
     .pipe(common.replaceAll)
     .pipe(addsrc, 'dist/templates/*.js');
 
