@@ -46,7 +46,7 @@ console.log('port=' + port);
 console.log('main=' + main);
 
 
-gulp.task("serve", function () {
+gulp.task("webserver", function () {
     gulp.src(['dist', 'build'])
         .pipe(webserver({
             port: port ,
@@ -55,9 +55,6 @@ gulp.task("serve", function () {
             open: false
         }));
 })
-
-
-
 
 gulp.task('bundle', ['compile', 'templates'], function () {
     var dist = [];

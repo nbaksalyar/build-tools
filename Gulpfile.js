@@ -7,12 +7,12 @@ var argv = require('optimist').argv;
 var resources = require('./gulp/resources');
 var bower = require('./gulp/bower');
 var pack = require('./gulp/package');
-var bundle = require('./gulp/bundle');
 var partials = require('./gulp/partials');
 var templates = require('./gulp/templates');
 var watchify = require('./gulp/watchify');
 var webserver = require('./gulp/webserver');
-var watch = require('./gulp/watch');
+
+console.log(require('optimist').argv.watch)
 
 require('./gulp/styles');
 
@@ -22,8 +22,6 @@ gulp.task('package', ['all'], pack);
 gulp.task('all', ['bundle', 'styles', 'resources']);
 gulp.task('templates', ['partials'], templates);
 gulp.task('partials', partials);
-gulp.task('watch', watch);
-gulp.task('webserver', webserver(8100));
 gulp.task('default', ['package', 'webserver', 'watch']);
 
 if (argv.concat)
@@ -32,6 +30,17 @@ if (argv.concat)
 }
 else
 {
-    require('./gulp/bundle')
-    gulp.task('compile', watchify);
+	gulp.task('compile', watchify);
+	gulp.task('bundle', ['compile', 'templates'], require('./gulp/bundle'));
+	gulp.task('webserver', webserver(8100));    
+}
+
+gulp.task('watch',function() {
+  	gulp.watch('src/**/*.hbs', ['templates']);
+    gulp.watch('style/**/*.*', ['styles']);
+    gulp.run('webserver')
+});
+
+if (argv.watch) {
+  	gulp.run('watch')
 }
