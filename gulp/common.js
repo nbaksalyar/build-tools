@@ -6,7 +6,7 @@ var fs = require('fs');
 var minimist = require('minimist');
 var lazypipe = require('lazypipe');
 var replace = require('gulp-replace');
-
+var utils = require('../utils');
 var deploy = process.env.WORK_DIR;
 
 var knownOptions = {
@@ -47,23 +47,24 @@ bowerJson.excludes = bowerJson.excludes || [];
 bowerJson.standalone = bowerJson.standalone || [];
 bowerJson.directories = bowerJson.directories || {};
 bowerJson.overrides = bowerJson.overrides || {};
-
+var gitHash = utils.sh('git rev-parse --short HEAD');
+var timestamp = utils.dateFormat(new Date(), '%Y-%m-%d %H:%M:%S')
 var replaceAll = lazypipe()
     .pipe(function ()
     {
-        return replace('@@version', pkg.version)
+        return replace('@@version', pkg.version + " " + gitHash)
     })
     .pipe(function ()
     {
-        return replace('@@js_suffix', '.js?rel=' + new Date().getTime())
+        return replace('@@js_suffix', '.js?rel=' + gitHash)
     })
     .pipe(function ()
     {
-        return replace('@@css_suffix', '.css?rel=' + new Date().getTime())
+        return replace('@@css_suffix', '.css?rel=' + gitHash)
     })
     .pipe(function ()
     {
-        return replace('@@timestamp', new Date().toString())
+        return replace('@@timestamp', timestamp)
     });
 
 module.exports = {
