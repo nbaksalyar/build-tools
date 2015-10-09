@@ -34,7 +34,7 @@ var jsPipleline = lazypipe()
     .pipe(common.replaceAll)
     .pipe(addsrc, 'dist/templates/*.js');
 
-gulp.task("compile", function () {
+gulp.task("compile",function () {
     return gulp.src("src/**/*.js")
         .pipe(sourcemaps.init())
         .pipe(changed('dist'))
@@ -48,14 +48,11 @@ gulp.task("compile", function () {
 
 var port = common.pkg.port || 8101;
 var main = common.pkg.mainFile;
-console.log('port=' + port);
-console.log('main=' + main);
-console.log('watch=' + common.watch);
-
 
 gulp.task("webserver", function () {
     gulp.src(['dist', 'build'])
         .pipe(webserver({
+            host: '0.0.0.0',
             port: port ,
             livereload: true,
             directoryListing: true,

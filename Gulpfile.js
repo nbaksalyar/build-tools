@@ -35,6 +35,8 @@ else
 	gulp.task('webserver', webserver(8100));    
 }
 
+require('./gulp/plugin.js')
+
 gulp.task('watch',function() {
 	if (argv.concat) {
  		gulp.watch('src/**/*.js', ['compile']);
