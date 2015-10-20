@@ -68,6 +68,8 @@
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webdriver-launcher": "^1.0.4",
+    "karma-fixture": "^0.2.5",
+    "karma-json-fixtures-preprocessor": "0.0.5",
     "lazypipe": "^1.0.1",
     "lodash.assign": "^3.2.0",
     "merge-stream": "^1.0.0",
