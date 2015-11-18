@@ -54,7 +54,7 @@
     "gulp-wrap": "^0.11.0",
     "gulp-zip": "^3.0.2",
     "istanbul": "gotwarlost/istanbul#source-map",
-    "jasmine-ajax": "^3.1.1",
+    "jasmine-ajax": "^3.2.0",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.9",
     "karma-browserify": "^4.3.0",
