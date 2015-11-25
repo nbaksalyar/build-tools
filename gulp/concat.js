@@ -22,9 +22,13 @@ var concat = require('gulp-concat');
 var webserver = require('gulp-webserver');
 var replace = require('gulp-replace');
 var gzip = require('gulp-gzip');
+var through2 = require('through2');
 
 var jsPipleline = lazypipe()
     .pipe(plumber)
+    .pipe(function () {
+        return annotateDependencies();
+    })
     .pipe(function() { 
         return babel({
         highlightCode: true,
@@ -83,3 +87,29 @@ gulp.task('bundle', ['compile', 'templates'], function () {
         .pipe(gzip())
         .pipe(gulp.dest('build/'));
 });
+
+/**
+ * Adds @requires annotations for correct dependencies ordering
+ * in concatenated files.
+ */
+function annotateDependencies() {
+    var importsRe = /import.+?\s+from?\s+['"](.*?\.js)['"]/g;
+
+    return through2.obj(function (file, enc, cb) {
+        if (file.isBuffer()) {
+            var src = file.contents.toString('utf8');
+            var imports = [];
+
+            for (var match; match = importsRe.exec(src); match) {
+                imports.push(match[1]);
+            }
+
+            var deps = imports.reduce(function (str, dep) {
+                return str + "* @requires " + dep + "\n";
+            }, '');
+            var dst = src + "\n/*\n" + deps + "*/";
+            file.contents = new Buffer(dst);
+        }
+        cb(null, file);
+    });
+}
